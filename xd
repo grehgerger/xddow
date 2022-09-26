@@ -1,0 +1,169 @@
+local Library =
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/slattisbabygirl/cattoware/main/Wcatto.lua"))()
+local NotifyLibrary =
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Dynissimo/main/Scripts/AkaliNotif.lua"))()
+local Notify = NotifyLibrary.Notify
+Library.theme.accentcolor = Color3.fromRGB(255, 0, 0)
+Library.theme.accentcolor2 = Color3.fromRGB(255, 0, 0)
+
+local Window = Library:CreateWindow("DownWare", Vector2.new(492, 598), Enum.KeyCode.RightShift)
+local AimingTab = Window:CreateTab("Silent")
+local sonnedLlololol = AimingTab:CreateSector("Silent Aim", "left")
+
+circle = Drawing.new("Circle")
+circle.Color = Color3.fromRGB(255, 0, 0)
+circle.Thickness = 0.1
+circle.NumSides = 360
+circle.Radius = 50
+circle.Visible = false
+circle.Filled = false
+circle.Transparency = 0.5
+
+sonnedLlololol:AddToggle(
+    "Toggle Fov",
+    false,
+    function(L_75_arg0)
+        Aiming.ShowFOV = L_75_arg0
+    end
+)
+
+sonnedLlololol:AddToggle(
+    "Silent Aim",
+    false,
+    function(uwu)
+        local Aiming =
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/grehgerger/erferfefefer2/main/yes", true))()
+    end
+)
+
+Aiming.TeamCheck(false)
+
+local Workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local CurrentCamera = Workspace.CurrentCamera
+local RunService = game:GetService("RunService")
+
+RunService.Heartbeat:Connect(
+    function()
+        pcall(
+            function()
+                for i, v in pairs(game.Players:GetChildren()) do
+                    if v.Name ~= game.Players.LocalPlayer.Name then
+                        local hrp = v.Character.HumanoidRootPart
+                        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
+                    end
+                end
+            end
+        )
+    end
+)
+
+local LemonSettings = {
+    SilentAim = true,
+    AimLock = false,
+    Prediction = 0.1642,
+    AimLockKeybind = Enum.KeyCode.E
+}
+getgenv().LemonSettings = LemonSettings
+
+function Aiming.Check()
+    -------------
+    if not (Aiming.Enabled == true and Aiming.Selected ~= LocalPlayer and Aiming.SelectedPart ~= nil) then
+        return false
+    end
+
+    -- // Check if downed
+    local Character = Aiming.Character(Aiming.Selected)
+    local KOd = Character:WaitForChild("BodyEffects")["K.O"].Value
+    local Grabbed = Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil
+
+    -- // Check B
+    if (KOd or Grabbed) then
+        return false
+    end
+
+    -- //
+    return true
+end
+
+-- // Hook
+local __index
+__index =
+    hookmetamethod(
+    game,
+    "__index",
+    function(t, k)
+        -- // Check if it trying to get our mouse's hit or target and see if we can use it
+        if (t:IsA("Mouse") and (k == "Hit" or k == "Target") and Aiming.Check()) then
+            local SelectedPart = Aiming.SelectedPart
+
+            -- // Hit/Target
+            if (LemonSettings.SilentAim and (k == "Hit" or k == "Target")) then
+                -- // Hit to account prediction
+                local Hit = SelectedPart.CFrame + (SelectedPart.Velocity * LemonSettings.Prediction)
+
+                -- // Return modded val
+                return (k == "Hit" and Hit or SelectedPart)
+            end
+        end
+
+        -- // Return
+        return __index(t, k)
+    end
+)
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+mouse.KeyDown:Connect(
+    function(key)
+        if key == "k" then
+            if LemonSettings.SilentAim == false then
+                LemonSettings.SilentAim = true
+            else
+                LemonSettings.SilentAim = false
+            end
+        end
+    end
+)
+-- // Aimlock
+RunService:BindToRenderStep(
+    "AimLock",
+    0,
+    function()
+        if (LemonSettings.AimLock and Aiming.Check() and UserInputService:IsKeyDown(LemonSettings.AimLockKeybind)) then
+            -- // Vars
+            local SelectedPart = Aiming.SelectedPart
+
+            -- // Hit to account prediction
+            local Hit = SelectedPart.CFrame + (SelectedPart.Velocity * LemonSettings.Prediction)
+
+            CurrentCamera.CFrame = CFrame.lookAt(CurrentCamera.CFrame.Position, Hit.Position)
+        end
+    end
+)
+
+sonnedLlololol:AddTextbox("Prediction",false,function(L_72_arg0)
+    LemonSettings.Prediction = L_72_arg0
+    end)
+
+    
+
+    sonnedLlololol:AddSlider("HitChance", 0, 75, 100, 30, function(value)
+        Aiming.HitChance = value
+    end)
+    
+  
+
+    sonnedLlololol:AddSlider("SilentAim Fov Size", 0, 50, 250, 30, function(L_74_arg0)
+        Aiming.FOV = L_74_arg0
+        end)
+
+    sonnedLlololol:AddDropdown("Hitbox",{"Head";"UpperTorso";"HumanoidRootPart", "LowerTorso"},"HumanoidRootPart",false, function(L_73_arg0)
+        Aiming.TargetPart = L_73_arg0
+    end)

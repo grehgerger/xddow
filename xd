@@ -148,52 +148,25 @@ RunService:BindToRenderStep(
     end
 )
 
-sonnedLlololol:AddTextbox(
-    "Prediction",
-    false,
-    function(L_72_arg0)
-        LemonSettings.Prediction = L_72_arg0
-    end
-)
+sonnedLlololol:AddTextbox("Prediction",false,function(L_72_arg0)
+    LemonSettings.Prediction = L_72_arg0
+    end)
 
-sonnedLlololol:AddSlider(
-    "HitChance",
-    0,
-    75,
-    100,
-    30,
-    function(value)
+    
+
+    sonnedLlololol:AddSlider("HitChance", 0, 75, 100, 30, function(value)
         Aiming.HitChance = value
-    end
-)
+    end)
+    
+  
 
-sonnedLlololol:AddSlider(
-    "SilentAim Fov Size",
-    0,
-    50,
-    250,
-    30,
-    function(L_74_arg0)
+    sonnedLlololol:AddSlider("SilentAim Fov Size", 0, 50, 250, 30, function(L_74_arg0)
         Aiming.FOV = L_74_arg0
-    end
-)
+        end)
 
-sonnedLlololol:AddDropdown(
-    "Hitbox",
-    {"Head", "UpperTorso", "HumanoidRootPart", "LowerTorso"},
-    "HumanoidRootPart",
-    false,
-    function(L_73_arg0)
+    sonnedLlololol:AddDropdown("Hitbox",{"Head";"UpperTorso";"HumanoidRootPart", "LowerTorso"},"HumanoidRootPart",false, function(L_73_arg0)
         Aiming.TargetPart = L_73_arg0
-    end
-)
-sonnedLlololol:colorpicker(
-    {
-        name = "FOV Colour",
-        cpname = "",
-        def = Color3.new(0.603921, 0.011764, 1),
-        callback = function(color)
-            LemonSettings.SilentAim.FOVColour = FOVColour
-        end
-    }
-)
+    end)
+   sonnedLlololol:colorpicker({name = "FOV Colour", cpname = "", def = Color3.new(0.603921, 0.011764, 1), callback = function(color)
+    LemonSettings.SilentAim.FOVColour = FOVColour
+end})

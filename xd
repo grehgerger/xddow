@@ -3,12 +3,15 @@ local Library =
 local NotifyLibrary =
     loadstring(game:HttpGet("https://raw.githubusercontent.com/Kinlei/Dynissimo/main/Scripts/AkaliNotif.lua"))()
 local Notify = NotifyLibrary.Notify
-Library.theme.accentcolor = Color3.fromRGB(255, 0, 0)
-Library.theme.accentcolor2 = Color3.fromRGB(255, 0, 0)
+Library.theme.accentcolor = Color3.fromRGB(0,0,255)
+Library.theme.accentcolor2 = Color3.fromRGB(0,0,255)
 
 local Window = Library:CreateWindow("DownWare", Vector2.new(492, 598), Enum.KeyCode.RightShift)
 local AimingTab = Window:CreateTab("Silent")
 local sonnedLlololol = AimingTab:CreateSector("Silent Aim", "left")
+local AimingTab = Window:CreateTab("Anti Aim")
+local reverseaiming = AimingTab:CreateSector("Anti Lock", "left")
+
 
 circle = Drawing.new("Circle")
 circle.Color = Color3.fromRGB(255, 0, 0)
@@ -167,6 +170,16 @@ sonnedLlololol:AddTextbox("Prediction",false,function(L_72_arg0)
     sonnedLlololol:AddDropdown("Hitbox",{"Head";"UpperTorso";"HumanoidRootPart", "LowerTorso"},"HumanoidRootPart",false, function(L_73_arg0)
         Aiming.TargetPart = L_73_arg0
     end)
-   sonnedLlololol:colorpicker({name = "FOV Colour", cpname = "", def = Color3.new(0.603921, 0.011764, 1), callback = function(color)
-    LemonSettings.SilentAim.FOVColour = FOVColour
-end})
+
+sonnedLlololol:AddToggle(
+    "Toggle Fov",
+    false,
+    function()getgenv().down = true
+        Aiming.ShowFOV = false
+    end
+)
+local ColorToggle = sonnedLlololol:AddToggle("Color Selector", false, function(e)
+end)
+
+ColorToggle:AddColorpicker(Color3.fromRGB(0,0,255), function(ztx)
+   end)
